@@ -1,26 +1,18 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
 const hre = require("hardhat");
-const tokenContractJSON = require("../artifacts/contracts/MetaToken.sol/MetaToken.json");
+const tokenContractJSON = require("../artifacts/contracts/tomandjerry.sol/tomandjerry.json");
 
-const tokenAddress = ""; // place your erc20 contract address here
+const tokenAddress = "0x7Bc1110BE19692705197dE44119109BBB461493F";
 const tokenABI = tokenContractJSON.abi;
-const walletAddress = ""; // place your public address for your wallet here
+const walletAddress = "0xC63Ef7276606B11cCCae9b7149f3D35b17389d78"; 
 
 async function main() {
-
     const token = await hre.ethers.getContractAt(tokenABI, tokenAddress);
+    console.log("My tomandjerry balance : " + await token.balanceOf(walletAddress) + " NFT tokens");
+}
 
-    console.log("You now have: " + await token.balanceOf(walletAddress) + " tokens");
-  }
-  
-  // We recommend this pattern to be able to use async/await everywhere
-  // and properly handle errors.
-  main().catch((error) => {
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
-  });
+});

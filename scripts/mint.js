@@ -1,30 +1,26 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
-const tokenContractJSON = require("../artifacts/contracts/MetaToken.sol/MetaToken.json");
-require('dotenv').config()
-
-const tokenAddress = ""; // place your erc20 contract address here
-const tokenABI = tokenContractJSON.abi;
-const walletAddress = ""; // place your public address for your wallet here
+const { ethers } = require("hardhat");
+require("dotenv").config();
 
 async function main() {
 
-    const token = await hre.ethers.getContractAt(tokenABI, tokenAddress);
-  
-    const tx = await token.mint(walletAddress, 1000);
-    await tx.wait();
+  const privateKey = process.env.PRIVATE_KEY;
+  const networkAddress = "https://ethereum-sepolia-rpc.publicnode.com";
+  const provider = new ethers.providers.JsonRpcProvider(networkAddress);
+  const signer = new ethers.Wallet(privateKey, provider);
 
-    console.log("You now have: " + await token.balanceOf(walletAddress) + " tokens");
-  }
-  
-  // We recommend this pattern to be able to use async/await everywhere
-  // and properly handle errors.
-  main().catch((error) => {
+  const contractAddress = "0xD6d51c3Ad6f0379b01f58aFC486cAE57e533711D";
+
+  const tomandjerry = await ethers.getContractFactory("tomandjerry", signer);
+  const tomandjerry_contract = await tomandjerry.attach(contractAddress);
+
+  await tomandjerry_contract.mint(5);
+
+  console.log("Minted my NFTs");
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch(error => {
     console.error(error);
-    process.exitCode = 1;
+    process.exit(1);
   });
